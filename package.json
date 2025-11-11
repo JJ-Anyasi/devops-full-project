@@ -1,0 +1,23 @@
+{
+  "name": "nodejs-mongodb-sample",
+  "version": "1.0.0",
+  "description": "Simple NodeJs application which communicates with Mongo data base",
+  "repository": "https://github.com/che-samples/nodejs-mongodb-sample",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "debug": "node --inspect=9229 app.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.8.4",
+    "body-parser": "^1.18.3",
+    "dotenv": "^17.2.3",
+    "eslint": "^5.16.0",
+    "express": "^4.16.4",
+    "moment": "^2.24.0",
+    "mongodb": "^6.16.0",
+    "mongoose": "^8.13.2",
+    "pug": "^3.0.3"
+  }
+}

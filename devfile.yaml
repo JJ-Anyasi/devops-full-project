@@ -1,0 +1,58 @@
+schemaVersion: 2.2.2
+metadata:
+  name: nodejs-mongodb
+components:
+  - name: tools
+    container:
+      image: quay.io/devfile/universal-developer-image:ubi9-latest
+      env:
+      # The values below are used to set up the environment for running the application
+        - name: SECRET
+          value: dummy-value 
+        - name: NODE_ENV
+          value: production
+      endpoints:
+        - exposure: public
+          name: nodejs
+          targetPort: 8080
+          protocol: https
+      memoryLimit: 1G
+      mountSources: true
+
+  - name: mongo
+    container:
+      image: bitnami/mongodb:8.0.8
+      env:
+        - name: MONGODB_USERNAME
+          value: user
+        - name: MONGODB_PASSWORD
+          value: password
+        - name: MONGODB_DATABASE
+          value: guestbook
+        - name: MONGODB_ROOT_PASSWORD
+          value: password
+      endpoints:
+        - name: mongodb
+          exposure: internal
+          targetPort: 27017
+          attributes:
+            discoverable: 'true'
+      memoryLimit: 512Mi
+      mountSources: true
+      volumeMounts:
+        - name: mongo-storage
+          path: /bitnami/mongodb
+
+  - name: mongo-storage
+    volume:
+      size: 256Mi
+
+commands:
+  - id: run-application
+    exec:
+      label: "Run the application"
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "npm install && node --inspect=9229 app.js"
+      group:
+        kind: run

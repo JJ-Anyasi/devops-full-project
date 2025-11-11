@@ -1,0 +1,28 @@
+replicaCount: 1
+
+image:
+  repository: anyasi/node-mongo-app
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: LoadBalancer
+  port: 8080
+
+mongodb:
+  image: mongo
+  tag: "6"
+  port: 27017
+  storage: 2Gi
+  username: admin
+  password: password123
+  database: mydb
+
+config:
+  mongo_url: mongodb://admin:password123@mongodb-service:27017/mydb
+
+httpRoute:
+  enabled: false
+
+ingress:
+  enabled: false

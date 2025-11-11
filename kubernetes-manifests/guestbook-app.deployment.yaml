@@ -1,0 +1,65 @@
+#--------------------------------------------------------------------------------------------
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-guestbook-app
+  labels:
+    app: node-guestbook
+    tier: frontend
+spec:
+  selector:
+    app: node-guestbook
+    tier: frontend
+  ports:
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-guestbook-apk
+  labels:
+    app: node-guestbook
+    tier: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-guestbook
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: node-guestbook
+        tier: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: registry.access.redhat.com/ubi9/nodejs-18:9.5-1742967160
+        command: ['/bin/sh', '-c']
+        args: ['cd /opt/app-root/src && git clone https://github.com/che-samples/nodejs-mongodb-sample.git && cd nodejs-mongodb-sample/ && npm install && npm start']
+        imagePullPolicy: Always
+        env:
+        - name: MONGODB_URI
+          value: mongodb://user:password@mongo:27017/guestbook
+        ports:
+        - name: http
+          containerPort: 8080
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: node-guestbook-app
+  labels:
+    app: node-guestbook
+spec:
+  to:
+    kind: Service
+    name: node-guestbook-app
+  port:
+    targetPort: 8080-tcp
+  tls:
+    termination: edge
+  wildcardPolicy: None
