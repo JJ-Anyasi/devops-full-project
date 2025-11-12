@@ -15,12 +15,12 @@ spec:
     spec:
       containers:
         - name: node-app
-          image: anyasi/node-mongo-app:latest   # ✅ Correct image
+          image: anyasi/node-mongo-app:latest   
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
-            - name: MONGO_URI                   # ✅ Must match your code
+            - name: MONGO_URI                   
               valueFrom:
                 configMapKeyRef:
                   name: node-mongo-config
